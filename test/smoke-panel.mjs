@@ -129,7 +129,7 @@ function textOf(node) {
 
 function renderPanel(draft) {
   hookIndex = 0
-  presets = [draft || cfg, cfg, '/tmp/hdd-console.json', '1.0.1', null, null, false, { name: 'hanlin', host: 'TESTHOST' }]
+  presets = [draft || cfg, cfg, '/tmp/hdd-console.json', '1.0.1', null, null, false, { name: 'hanlin', host: 'TESTHOST' }, null]
   const el = registered.render()
   const out = []
   walk(el, out)
@@ -146,8 +146,8 @@ check('没有渲染错误', !view.some((n) => n.cls === '__render_error'), (view
 /* ── 单页分组：旧版那种滚动卡片 ───────────────────────────────────────────── */
 const groupTitles = view.filter((n) => n.cls === '__hb_groupTitle').map((n) => n.text)
 check('没有标签页按钮', !view.some((n) => n.cls.indexOf('__hb_tab') === 0))
-check('有 6 个分组', groupTitles.length === 6, groupTitles.join('|'))
-;['播放', '身份与标牌', '六幕脚本', '启动日志', '配色', '声音'].forEach((t) => {
+check('有 7 个分组', groupTitles.length === 7, groupTitles.join('|'))
+;['播放', '身份与标牌', '六幕脚本', '启动日志', '配色', '声音', '更新'].forEach((t) => {
   check('分组「' + t + '」', groupTitles.some((x) => x.indexOf(t) >= 0), groupTitles.join('|'))
 })
 
@@ -164,6 +164,9 @@ check('5 个配色预设', ['默认琥珀', '青绿', '冰蓝', '品红', '旧�
 
 check('顶部显示当前用户', view.some((n) => n.cls === '__hb_user' && n.text.indexOf('hanlin') >= 0), (view.find((n) => n.cls === '__hb_user') || {}).text)
 check('有「立即预览」', view.some((n) => n.text.indexOf('立即预览') >= 0))
+check('有「自动检查更新」开关', view.some((n) => n.text.indexOf('自动检查更新') >= 0))
+check('有「检查更新」按钮', view.some((n) => n.text === '检查更新'))
+check('更新默认关闭（FALLBACK）', source.includes('autoUpdate: false'))
 check('有保存 / 恢复默认 / 导入 / 导出', ['保存', '恢复默认', '导入 JSON', '导出 JSON'].every((t) => view.some((n) => n.text === t)))
 
 /* ── 缺配置时也不白屏 ─────────────────────────────────────────────────────── */

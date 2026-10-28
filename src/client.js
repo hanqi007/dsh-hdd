@@ -81,14 +81,14 @@ window.__ModuleLoader__.load({
     /* 旧 Host 没有这些字段时，面板也要能正常显示，不出现 undefined */
     var FALLBACK = {
       enabled: true, mode: 'session', speed: 1, requireGate: true, allowSkip: true,
-      sound: true, volume: 0.6, accent: 'amber',
+      sound: true, volume: 0.6, accent: 'amber', autoUpdate: false,
       identity: 'HANLIN', station: 'STATION 07', build: '1.0.0',
       title: 'HDD', subtitle: 'HARD DISK DRIVE CONTROL',
       bootLine: '启动深空检索终端',
       bootLineEn: 'BOOTING DEEP-SPACE RETRIEVAL TERMINAL',
       footer: 'DEEPSEEK HARNESS · ORIGINAL BOOT SEQUENCE'
     }
-    var FALLBACK_VERSION = '1.0.5'
+    var FALLBACK_VERSION = '1.1.0'
 
     /* 由 build.mjs 从 src/boot.js 注入，三处共用一份真相源 */
     var DEFAULT_STEPS = __HDD_DEFAULT_STEPS__
@@ -291,6 +291,7 @@ window.__ModuleLoader__.load({
       var [notice, setNotice] = react.useState(null)
       var [busy, setBusy] = react.useState(false)
       var [user, setUser] = react.useState(null)
+      var [update, setUpdate] = react.useState(null)
 
       function load() {
         setError(null)
@@ -302,12 +303,54 @@ window.__ModuleLoader__.load({
             setDefaults(withDefaults(j.defaults))
             setFile(j.file || '')
             setUser(j.user || null)
+            maybeAutoCheck(j.config && j.config.autoUpdate === true)
             if (j.version) setVersion(String(j.version))
           })
           .catch((e) => setError('读取配置失败：' + String(e && e.message ? e.message : e)))
       }
 
       react.useEffect(function () { load() }, [])
+
+      function checkUpdates() {
+        setUpdate({ checking: true })
+        fetch('/hdd-console/update?force=1', { headers: { Accept: 'application/json' } })
+          .then(function (r) { return r.json() })
+          .then(function (j) { setUpdate(Object.assign({ checking: false }, j || {})) })
+          .catch(function (e) {
+            setUpdate({ checking: false, ok: false, error: String(e && e.message ? e.message : e) })
+          })
+      }
+
+      /* 自动检查：默认关；开了也最多 24 小时一次，且只提示不安装 */
+      function maybeAutoCheck(enabled) {
+        if (enabled !== true) return
+        var key = 'hdd-console:update-checked'
+        var last = 0
+        try { last = Number(localStorage.getItem(key) || 0) } catch (e) { last = 0 }
+        if (Date.now() - last < 24 * 3600 * 1000) return
+        try { localStorage.setItem(key, String(Date.now())) } catch (e) { /* 隐私模式 */ }
+        checkUpdates()
+      }
+
+      function updateLine() {
+        if (!update) return null
+        if (update.checking) return h('span', { className: '__hb_notice' }, '检查中…')
+        if (update.ok === false) {
+          return h('span', { className: '__hb_notice' }, '检查失败：' + (update.error || '网络不可达'))
+        }
+        if (update.hasUpdate) {
+          return h('span', { className: '__hb_notice' },
+            '发现新版本 v' + update.latest + '（当前 v' + update.current + '）· ',
+            h('a', {
+              href: update.url || 'https://github.com/hanqi007/dsh-hdd',
+              target: '_blank',
+              rel: 'noreferrer',
+              style: { color: 'var(--dsw-alias-state-business-primary)' }
+            }, '去 GitHub 下载')
+          )
+        }
+        return h('span', { className: '__hb_notice' }, '已是最新（v' + (update.current || version) + '）')
+      }
 
       function set(key, value) {
         setNotice(null)
@@ -594,6 +637,29 @@ window.__ModuleLoader__.load({
         )
       ]
 
+      /* ── 更新 ── */
+      var updatePane = h('div', { className: '__hb_group', key: 'update' },
+        h('div', { className: '__hb_groupTitle' }, '更新'),
+        h(Check, {
+          label: '自动检查更新',
+          hint: '默认关闭。开启后打开设置页会向 GitHub 查一次版本（24 小时最多一次），只提示「有新版本」，不会自动下载或替换插件。',
+          checked: draft.autoUpdate === true,
+          onChange: (v) => set('autoUpdate', v)
+        }),
+        h('div', { className: '__hb_row' },
+          h('button', {
+            type: 'button',
+            className: '__hb_btn',
+            disabled: !!(update && update.checking),
+            onClick: checkUpdates
+          }, update && update.checking ? '检查中…' : '检查更新'),
+          updateLine(),
+          h('span', { className: '__hb_status' }, '当前 v' + (version || FALLBACK_VERSION))
+        ),
+        h('div', { className: '__hb_hint' },
+          '插件不会在运行时替换自己的文件——检测到新版本后仍然用 dsh plugin add 安装，装完重启生效。')
+      )
+
       /* ── 配色 ── */
       var colorsPane = [
         h('div', { className: '__hb_group', key: 'colors' },
@@ -644,6 +710,7 @@ window.__ModuleLoader__.load({
         .concat(logsPane)
         .concat(colorsPane)
         .concat([basicPane[2]])
+        .concat([updatePane])
 
       return h('div', { className: '__hb_root' },
         h('div', { className: '__hb_version' }, '版本 v' + (version || FALLBACK_VERSION)),

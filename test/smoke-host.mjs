@@ -29,11 +29,12 @@ const ctx = {
 mod.apply(ctx)
 
 console.log('\n[2] 路由')
-check('注册了 3 条路由', routes.length === 3, String(routes.length))
+check('注册了 4 条路由', routes.length === 4, String(routes.length))
 const byPath = Object.fromEntries(routes.map((r) => [r.path, r]))
 check('样式路由存在', !!byPath['/hdd-console/splash.css'])
 check('运行时路由存在', !!byPath['/hdd-console/splash.js'])
 check('配置路由存在', !!byPath['/hdd-console/config'])
+check('更新检查路由存在', !!byPath['/hdd-console/update'])
 check('全部是 exact 路由', routes.every((r) => r.kind === 'exact'))
 
 function fakeReq(method, body) {
@@ -76,6 +77,7 @@ check('GET 带 version', typeof cfg.version === 'string' && /^\d+\.\d+\.\d+/.tes
 check('GET 带 defaults', !!cfg.defaults && cfg.defaults.title === 'HDD')
 check('GET 带配置文件路径', typeof cfg.file === 'string' && cfg.file.endsWith('hdd-console.json'), cfg.file)
 check('GET 带当前用户', !!(cfg.user && typeof cfg.user.name === 'string' && cfg.user.name.length > 0), JSON.stringify(cfg.user))
+check('自动更新默认关闭', cfg.defaults && cfg.defaults.autoUpdate === false, String(cfg.defaults && cfg.defaults.autoUpdate))
 
 const cfgPost = fakeRes()
 await byPath['/hdd-console/config'].handler(
