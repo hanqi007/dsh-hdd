@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HDD 控制台开机动画 · 源码预览</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#060708}
+html.hdd-lock,html.hdd-lock body{overflow:hidden!important}
+#mockApp{position:fixed;inset:0;z-index:1;display:flex;background:#f6f5f1;font-family:"Microsoft YaHei","Segoe UI",system-ui,sans-serif}
+#mockApp .side{width:246px;background:#efefec;border-right:1px solid #e2e1dc;padding:14px 12px}
+#mockApp .brand{display:flex;align-items:center;gap:8px;font-weight:700;color:#2b2b2b;font-size:13px;margin-bottom:8px;letter-spacing:.04em}
+#mockApp .brand b{width:18px;height:18px;border-radius:5px;background:#4d6bfe;display:inline-block}
+#mockApp .item{font-size:13px;color:#55565a;padding:7px 9px;border-radius:8px}
+#mockApp .item.on{background:#fff;color:#1d1d1f;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+#mockApp .main{flex:1;display:flex;flex-direction:column}
+#mockApp .top{height:46px;border-bottom:1px solid #e6e6e2;display:flex;align-items:center;padding:0 18px;font-size:13px;color:#6a6b6f}
+#mockApp .body{flex:1;padding:28px 34px;font-size:13.5px;line-height:1.9;color:#2c2d31}
+#mockApp .body p{margin:0 0 10px}
+#mockApp .kbd{display:inline-block;padding:1px 6px;border:1px solid #d8d7d2;border-bottom-width:2px;border-radius:4px;font-size:12px;color:#4a4b50;margin:0 3px;background:#fff}
+/* 演示控制条 */
+#bar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:2147483600;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 20px);padding:9px 12px;border-radius:12px;background:rgba(12,14,16,.94);border:1px solid rgba(233,226,210,.16);box-shadow:0 16px 46px rgba(0,0,0,.5);backdrop-filter:blur(8px);font:12.5px/1.2 "Microsoft YaHei","Segoe UI",system-ui,sans-serif;color:#e9e2d2;transition:opacity 220ms ease,transform 220ms ease}
+#bar.hide{opacity:0;pointer-events:none;transform:translate(-50%,12px)}
+#bar button,#bar select{font:inherit;color:#f0ece2;background:rgba(255,255,255,.06);border:1px solid rgba(233,226,210,.22);border-radius:8px;padding:6px 11px;cursor:pointer}
+#bar button:hover{border-color:#f2a23c}
+#bar button.primary{background:#f2a23c;border-color:#f2a23c;color:#141414;font-weight:600}
+#bar label{display:flex;align-items:center;gap:6px;color:#c9c4b6}
+#bar input[type=range]{width:88px;accent-color:#f2a23c}
+#bar .sep{width:1px;height:18px;background:rgba(233,226,210,.16)}
+#bar .tip{color:#8b877c;font-size:11px}
+#showbar{position:fixed;right:14px;bottom:14px;z-index:2147483601}
+#showbar button{font:12px "Microsoft YaHei",system-ui,sans-serif;color:#e9e2d2;background:rgba(12,14,16,.9);border:1px solid rgba(233,226,210,.18);border-radius:8px;padding:5px 10px;cursor:pointer}
+@media (max-width:760px){#bar{font-size:11px;gap:6px}#bar .tip{display:none}}</style>
+<link rel="stylesheet" href="../src/boot.css">
+<style>#hdd-root.hdd-boot{position:fixed;inset:0;z-index:2147483000;background:#060708}</style>
+</head>
+<body>
+<div id="mockApp">
+  <div class="side">
+    <div class="brand"><b></b>DEEPSEEK HARNESS</div>
+    <div class="item on">新会话</div>
+    <div class="item">工作区</div>
+    <div class="item">插件</div>
+    <div class="item">设置</div>
+  </div>
+  <div class="main">
+    <div class="top">主界面 · 启动动画已结束</div>
+    <div class="body">
+      <p>控制台已经移交。这一页是假主场，只为让「揭幕」那一秒有东西可看。</p>
+      <p>点击右下角<span class="kbd">重播</span>可以再看一遍；也可以打开控制条调速度、音效、强调色。</p>
+    </div>
+  </div>
+</div>
+<div id="hdd-root" class="hdd-root hdd-boot"></div>
+<script>
+  window.__HDD_CONFIG__ = {
+    enabled: true,
+    mode: 'always',
+    speed: 1,
+    requireGate: true,
+    allowSkip: true,
+    sound: true,
+    volume: 0.6,
+    accent: 'amber',
+    identity: 'HANLIN',
+    station: 'STATION 07',
+    build: '1.0.0',
+    bootLine: '启动深空检索终端',
+    bootLineEn: 'BOOTING DEEP-SPACE RETRIEVAL TERMINAL',
+    title: 'HDD',
+    subtitle: 'HARD DISK DRIVE CONTROL',
+    footer: 'DEEPSEEK HARNESS · ORIGINAL BOOT SEQUENCE'
+  };
+  document.documentElement.classList.add('hdd-lock');
+</script>
+<script>window.__HDD_SCRIPT_URL__ = '../src/replay.js'</script>
+<script src="../src/audio.js"></script>
+<script src="../src/instrument.js"></script>
+<script src="../src/boot.js"></script>
+<div id="bar">
+  <button class="primary" id="barReplay" type="button">↻ 重播</button>
+  <button id="barSkip" type="button">跳过</button>
+  <div class="sep"></div>
+  <label>速度 <input type="range" id="barSpeed" min="0.35" max="2.5" step="0.05" value="1"><b id="barSpeedV">1.00×</b></label>
+  <label>强调色
+    <select id="barAccent">
+      <option value="amber" selected>琥珀橙</option>
+      <option value="jade">青绿</option>
+    </select>
+  </label>
+  <label><input type="checkbox" id="barSound" checked> 音效</label>
+  <div class="sep"></div>
+  <button id="barHide" type="button">收起</button>
+  <span class="tip">颜色即时生效 · 速度影响后续步骤</span>
+</div>
+<div id="showbar" hidden><button id="barShow" type="button">显示控制条</button></div>
+<script>
+;(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var bar = $('bar');
+
+  function cfg() { return window.__HDD_CONFIG__; }
+  function api() { return window.HDD_API; }
+
+  function live() {
+    var c = cfg();
+    var v = Number($('barSpeed').value);
+    $('barSpeedV').textContent = v.toFixed(2) + '×';
+    c.speed = v;
+    c.accent = $('barAccent').value;
+    c.sound = $('barSound').checked;
+    if (api()) {
+      api().set({ speed: v, accent: c.accent, sound: c.sound, volume: 0.6 });
+    }
+  }
+
+  function syncBar() {
+    var c = cfg();
+    barSpeed.value = c.speed;
+    barSpeedV.textContent = Number(c.speed).toFixed(2) + '×';
+    barAccent.value = c.accent === 'jade' ? 'jade' : 'amber';
+    barSound.checked = c.sound !== false;
+  }
+
+  function replay() {
+    var c = cfg();
+    c.speed = Number($('barSpeed').value);
+    c.accent = $('barAccent').value;
+    c.sound = $('barSound').checked;
+    if (api() && api().replay) api().replay();
+  }
+
+  $('barReplay').addEventListener('click', replay);
+  $('barSkip').addEventListener('click', function () { if (api()) api().skip(); });
+  $('barSpeed').addEventListener('input', live);
+  $('barAccent').addEventListener('change', replay);
+  $('barSound').addEventListener('change', live);
+  $('barHide').addEventListener('click', function () { bar.classList.add('hide'); $('showbar').hidden = false; });
+  $('barShow').addEventListener('click', function () { bar.classList.remove('hide'); $('showbar').hidden = true; });
+  bar.addEventListener('keydown', function (e) { e.stopPropagation(); });
+  syncBar();
+  setTimeout(syncBar, 400);
+
+  window.addEventListener('hdd-boot:done', function () {
+    bar.classList.remove('hide');
+    $('showbar').hidden = true;
+  });
+})();
+</script>
+</body>
+</html>
