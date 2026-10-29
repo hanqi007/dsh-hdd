@@ -258,6 +258,27 @@
   flex: 0 0 auto;
   min-width: 0;
 }
+.hdd-ds {
+  width: 25px;
+  height: 25px;
+  margin-left: 10px;
+  color: var(--amber);
+  opacity: 0.72;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 260ms ease;
+}
+
+.hdd-ds svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hdd-id:hover .hdd-ds { opacity: 1; }
+
 .hdd-id {
   display: flex;
   align-items: center;
