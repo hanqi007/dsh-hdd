@@ -816,7 +816,39 @@ html.hdd-lock,html.hdd-lock body{overflow:hidden!important}
   .hdd-logline { font-size: 10px; }
   .hdd-scope { width: min(100%, 460px); max-height: 40vh; }
   .hdd-zh { font-size: clamp(18px, 2.4vw, 26px); }
-}</style>
+}
+
+/* ── 无障碍：系统要求减少动态效果时，停掉装饰性动画 ───────────────────
+   保留进度条与揭幕这类「表达状态」的动效，只关掉扫描线、闪烁、噪点、
+   故障切片这些纯装饰的循环动画，避免眩晕并降低 GPU 占用。 */
+@media (prefers-reduced-motion: reduce) {
+  .hdd-scanlines,
+  .hdd-roll,
+  .hdd-noise,
+  .hdd-curve,
+  .hdd-glitch-slices,
+  .hdd-hex,
+  .hdd-vignette {
+    animation: none !important;
+  }
+  .hdd-scanlines,
+  .hdd-roll {
+    opacity: 0.3 !important;
+  }
+  .hdd-alert i,
+  .hdd-panetitle,
+  .hdd-meter-bar i {
+    animation: none !important;
+  }
+}
+
+/* 把常驻变换提到合成层，减少主线程重绘 */
+.hdd-scanlines,
+.hdd-roll,
+.hdd-glitch-slices {
+  will-change: transform, opacity;
+}
+</style>
 <style>#hdd-root.hdd-boot{position:fixed;inset:0;z-index:2147483000;background:#060708}</style>
 </head>
 <body>
@@ -1301,6 +1333,8 @@ window.__HDD_SCRIPT_URL__ = '#reload';
     function seedRain() {
       rain = []
       var cols = Math.max(2, Math.floor(W / 96))
+      /* 减少动态效果时把雨滴列数砍半，降低 canvas 每帧绘制量 */
+      if (reduced) cols = Math.max(2, Math.floor(cols * 0.5))
       for (var i = 0; i < cols; i++) {
         rain.push({
           x: (i + 0.5) * (W / cols) + rand(-6, 6),
@@ -1507,9 +1541,15 @@ window.__HDD_SCRIPT_URL__ = '#reload';
     }
 
     /* ── 主循环 ───────────────────────────────────────────────────────── */
+    var lastPaint = 0
     function frame(now) {
       if (destroyed || !live) return
       raf = global.requestAnimationFrame(frame)
+      /* 页面不可见时不画（浏览器已节流，这里直接跳过省电） */
+      if (global.document && global.document.hidden) return
+      /* 减少动态效果时限制到 30fps：视觉几乎无差别，功耗明显低 */
+      if (reduced && now - lastPaint < 33) return
+      lastPaint = now
       if (!last) last = now
       var raw = Math.min(64, now - last)
       last = now
