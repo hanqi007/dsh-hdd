@@ -1,3 +1,16 @@
+/**
+ * hdd-console-boot — HDD 控制台开机动画
+ * Copyright 2026 hanlin (hanqi007)
+ *
+ * Licensed under the Apache License, Version 2.0, with additional terms:
+ *   - Apache 2.0 full text .... LICENSE
+ *   - Additional restrictions . LICENSE-CUSTOM.md
+ *
+ * 允许免费使用与分发；不得以本软件为收费主体，
+ * 也不得在自身不是收费主体的前提下进行收费分发。
+ * Free to use and distribute, but you may not charge for the software
+ * itself, nor charge for distributing it.
+ */
 /* ============================================================================
  * hdd-console-boot — 浏览器半侧（设置页「开机动画」）
  * ----------------------------------------------------------------------------
@@ -88,7 +101,7 @@ window.__ModuleLoader__.load({
       bootLineEn: 'BOOTING DEEP-SPACE RETRIEVAL TERMINAL',
       footer: 'DEEPSEEK HARNESS · ORIGINAL BOOT SEQUENCE'
     }
-    var FALLBACK_VERSION = '1.3.11'
+    var FALLBACK_VERSION = '1.3.12'
 
     /* 由 build.mjs 从 src/boot.js 注入，三处共用一份真相源 */
     var DEFAULT_STEPS = __HDD_DEFAULT_STEPS__
