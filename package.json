@@ -1,6 +1,6 @@
 {
   "name": "hdd-console-boot",
-  "version": "1.3.13",
+  "version": "1.4.0",
   "description": "DeepSeek Harness 开机动画（HDD 控制台）：一台工业终端冷启动的原创六幕序列——电源接入、阵列自检、磁道寻道、扇区校验（可人工放行）、权限核验、数据贯通，最后白闪揭幕。CRT 显像管、扫描线、十六进制瀑布、六边形环阵列、分段进度条、故障切片与 WebAudio 合成音效；全部文案、图形与时序独立编写，只借用「工业终端操作台」这一类视觉语汇。web profile 与 DeepSeek Harness Desktop 桌面端通用。",
   "keywords": [
     "dsh",
