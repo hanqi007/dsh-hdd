@@ -287,9 +287,15 @@
     }
 
     /* ── 主循环 ───────────────────────────────────────────────────────── */
+    var lastPaint = 0
     function frame(now) {
       if (destroyed || !live) return
       raf = global.requestAnimationFrame(frame)
+      /* 页面不可见时不画（浏览器已节流，这里直接跳过省电） */
+      if (global.document && global.document.hidden) return
+      /* 减少动态效果时限制到 30fps：视觉几乎无差别，功耗明显低 */
+      if (reduced && now - lastPaint < 33) return
+      lastPaint = now
       if (!last) last = now
       var raw = Math.min(64, now - last)
       last = now
