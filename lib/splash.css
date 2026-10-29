@@ -258,40 +258,6 @@
   flex: 0 0 auto;
   min-width: 0;
 }
-.hdd-ds {
-  width: 25px;
-  height: 25px;
-  margin-left: 10px;
-  color: var(--amber);
-  opacity: 0.72;
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 260ms ease;
-}
-
-.hdd-dsname {
-  margin-left: 8px;
-  margin-right: 14px;
-  font-family: var(--mono, ui-monospace, Consolas, monospace);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: none;
-  color: var(--amber);
-  opacity: 0.66;
-  flex: 0 0 auto;
-  white-space: nowrap;
-}
-
-.hdd-ds svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.hdd-id:hover .hdd-ds { opacity: 1; }
-
 .hdd-id {
   display: flex;
   align-items: center;
@@ -312,17 +278,6 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   line-height: 1;
-  white-space: nowrap;
-}
-.hdd-idcompany {
-  font-family: var(--f-display);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.24em;
-  line-height: 1.3;
-  margin-top: 2px;
-  color: var(--amber);
-  opacity: 0.62;
   white-space: nowrap;
 }
 .hdd-idsub {
@@ -733,24 +688,6 @@
   white-space: nowrap;
   overflow: hidden;
 }
-
-.hdd-foot .c {
-  flex: 1 1 auto;
-  display: flex;
-  justify-content: center;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.hdd-foot .c span {
-  font-size: 9px;
-  letter-spacing: 0.22em;
-  color: var(--paper-faint);
-  opacity: 0.7;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 .hdd-foot .l, .hdd-foot .r { display: flex; gap: 14px; align-items: center; }
 .hdd-foot b { color: var(--amber); font-weight: 400; }
 .hdd-skip {
@@ -847,4 +784,35 @@
   .hdd-logline { font-size: 10px; }
   .hdd-scope { width: min(100%, 460px); max-height: 40vh; }
   .hdd-zh { font-size: clamp(18px, 2.4vw, 26px); }
+}
+
+/* ── 无障碍：系统要求减少动态效果时，停掉装饰性动画 ───────────────────
+   保留进度条与揭幕这类「表达状态」的动效，只关掉扫描线、闪烁、噪点、
+   故障切片这些纯装饰的循环动画，避免眩晕并降低 GPU 占用。 */
+@media (prefers-reduced-motion: reduce) {
+  .hdd-scanlines,
+  .hdd-roll,
+  .hdd-noise,
+  .hdd-curve,
+  .hdd-glitch-slices,
+  .hdd-hex,
+  .hdd-vignette {
+    animation: none !important;
+  }
+  .hdd-scanlines,
+  .hdd-roll {
+    opacity: 0.3 !important;
+  }
+  .hdd-alert i,
+  .hdd-panetitle,
+  .hdd-meter-bar i {
+    animation: none !important;
+  }
+}
+
+/* 把常驻变换提到合成层，减少主线程重绘 */
+.hdd-scanlines,
+.hdd-roll,
+.hdd-glitch-slices {
+  will-change: transform, opacity;
 }
