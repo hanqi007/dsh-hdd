@@ -305,3 +305,16 @@ node test/smoke-panel.mjs     # 设置面板真渲染：四个标签页 / 6 张�
 ## License
 
 MIT
+
+## 许可证
+
+本项目采用**自定义许可证**，基于 Apache License 2.0 附加限制，详见 [LICENSE-CUSTOM.md](./LICENSE-CUSTOM.md)。
+
+简单说明：
+
+- ✅ 免费使用、修改、分发
+- ✅ 为围绕本软件的服务收费（技术支持、定制、托管、培训）
+- ❌ 不得把本软件本身当作收费主体（卖安装包、卖下载链接、单独计价）
+- ❌ 不得在自身不是收费主体的前提下收取分发费用
+
+Apache 2.0 全文见 [LICENSE](./LICENSE)。
