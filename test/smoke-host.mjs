@@ -88,7 +88,7 @@ const saved = JSON.parse(cfgPost.body)
 check('POST 返回 ok', saved.ok === true)
 check('速度被夹取到 3', saved.config.speed === 3, String(saved.config.speed))
 check('非法强调色回退 amber', saved.config.accent === 'amber', saved.config.accent)
-check('空身份名回退默认值', saved.config.identity === 'HANLIN', saved.config.identity)
+check('空身份名回退默认值', saved.config.identity === '深度求索', saved.config.identity)
 check('字符串 "false" 归一为布尔 false', saved.config.enabled === false, String(saved.config.enabled))
 
 const cfgBad = fakeRes()

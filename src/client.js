@@ -88,7 +88,7 @@ window.__ModuleLoader__.load({
       bootLineEn: 'BOOTING DEEP-SPACE RETRIEVAL TERMINAL',
       footer: 'DEEPSEEK HARNESS · ORIGINAL BOOT SEQUENCE'
     }
-    var FALLBACK_VERSION = '1.3.0'
+    var FALLBACK_VERSION = '1.3.8'
 
     /* 由 build.mjs 从 src/boot.js 注入，三处共用一份真相源 */
     var DEFAULT_STEPS = __HDD_DEFAULT_STEPS__
