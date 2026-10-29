@@ -733,6 +733,24 @@
   white-space: nowrap;
   overflow: hidden;
 }
+
+.hdd-foot .c {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.hdd-foot .c span {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--paper-faint);
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .hdd-foot .l, .hdd-foot .r { display: flex; gap: 14px; align-items: center; }
 .hdd-foot b { color: var(--amber); font-weight: 400; }
 .hdd-skip {
