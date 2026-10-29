@@ -79,6 +79,8 @@
     function seedRain() {
       rain = []
       var cols = Math.max(2, Math.floor(W / 96))
+      /* 减少动态效果时把雨滴列数砍半，降低 canvas 每帧绘制量 */
+      if (reduced) cols = Math.max(2, Math.floor(cols * 0.5))
       for (var i = 0; i < cols; i++) {
         rain.push({
           x: (i + 0.5) * (W / cols) + rand(-6, 6),
