@@ -40,7 +40,7 @@
   "license": "SEE LICENSE IN LICENSE-CUSTOM.md",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hanqi007/hdd-console-boot.git"
+    "url": "git+https://github.com/hanqi007/dsh-hdd.git"
   },
   "engines": {
     "node": ">=20"
