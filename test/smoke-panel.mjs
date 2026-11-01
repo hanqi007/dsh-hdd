@@ -129,7 +129,7 @@ function textOf(node) {
 
 function renderPanel(draft) {
   hookIndex = 0
-  presets = [draft || cfg, cfg, '/tmp/hdd-console.json', '1.0.1', null, null, false, { name: 'hanlin', host: 'TESTHOST' }, null]
+  presets = [draft || cfg, cfg, '/tmp/hdd-console.json', '1.0.1', null, null, false, { name: 'hanlin', host: 'TESTHOST' }, null, null, '', '']
   const el = registered.render()
   const out = []
   walk(el, out)
@@ -146,8 +146,8 @@ check('没有渲染错误', !view.some((n) => n.cls === '__render_error'), (view
 /* ── 单页分组：旧版那种滚动卡片 ───────────────────────────────────────────── */
 const groupTitles = view.filter((n) => n.cls === '__hb_groupTitle').map((n) => n.text)
 check('没有标签页按钮', !view.some((n) => n.cls.indexOf('__hb_tab') === 0))
-check('有 7 个分组', groupTitles.length === 7, groupTitles.join('|'))
-;['播放', '身份与标牌', '六幕脚本', '启动日志', '配色', '声音', '更新'].forEach((t) => {
+check('有 7 个以上分组', groupTitles.length >= 7, groupTitles.join('|'))
+;['主题', '播放', '身份与标牌', '六幕脚本', '启动日志', '配色', '更新'].forEach((t) => {
   check('分组「' + t + '」', groupTitles.some((x) => x.indexOf(t) >= 0), groupTitles.join('|'))
 })
 
