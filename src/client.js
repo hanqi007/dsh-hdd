@@ -37,51 +37,6 @@ window.__ModuleLoader__.load({
 
     var API = '/hdd-console/config'
 
-    /* ── 主界面主题：即时应用 ────────────────────────────────────────────── */
-    var UI_BASE = '/hdd-console'
-    var UI_STYLE_ID = 'hdd-ui-theme-live'
-    var UI_THEMES = [
-      { id: 'default', name: '跟随系统', desc: '不覆盖任何变量', vars: {} },
-      { id: 'paper', name: '纸白', desc: '浅色底、深灰字', vars: { '--dsw-alias-bg-layer': '#ffffff', '--dsw-alias-bg-layer-2': '#f7f8fa', '--dsw-alias-bg-layer-3': '#eef0f4', '--dsw-alias-bg-secondary': '#f7f8fa', '--dsw-alias-label-primary': '#1f2430', '--dsw-alias-label-secondary': '#3a4150', '--dsw-alias-label-tertiary': '#697086', '--dsw-alias-border-secondary': '#e3e6ec', '--dsw-alias-border-l2': '#e3e6ec', '--dsw-alias-state-business-primary': '#2563eb', 'color-scheme': 'light' } },
-      { id: 'ink', name: '墨黑', desc: '深色底、柔和白字', vars: { '--dsw-alias-bg-layer': '#14161c', '--dsw-alias-bg-layer-2': '#1b1e26', '--dsw-alias-bg-layer-3': '#242833', '--dsw-alias-bg-secondary': '#1b1e26', '--dsw-alias-label-primary': '#e8ebf2', '--dsw-alias-label-secondary': '#c2c8d4', '--dsw-alias-label-tertiary': '#8b93a3', '--dsw-alias-border-secondary': '#2f3441', '--dsw-alias-border-l2': '#2f3441', '--dsw-alias-state-business-primary': '#6b9bff', 'color-scheme': 'dark' } },
-      { id: 'sand', name: '暖沙', desc: '米黄纸感', vars: { '--dsw-alias-bg-layer': '#fbf6ec', '--dsw-alias-bg-layer-2': '#f5eede', '--dsw-alias-bg-layer-3': '#ebe1cd', '--dsw-alias-bg-secondary': '#f5eede', '--dsw-alias-label-primary': '#3b3225', '--dsw-alias-label-secondary': '#5c5040', '--dsw-alias-label-tertiary': '#8a7b64', '--dsw-alias-border-secondary': '#ded2ba', '--dsw-alias-border-l2': '#ded2ba', '--dsw-alias-state-business-primary': '#b45309', 'color-scheme': 'light' } },
-      { id: 'azure', name: '苍蓝', desc: '冷调蓝灰', vars: { '--dsw-alias-bg-layer': '#f4f7fb', '--dsw-alias-bg-layer-2': '#eaf0f8', '--dsw-alias-bg-layer-3': '#dde6f2', '--dsw-alias-bg-secondary': '#eaf0f8', '--dsw-alias-label-primary': '#1c2a3a', '--dsw-alias-label-secondary': '#38495e', '--dsw-alias-label-tertiary': '#6c7d93', '--dsw-alias-border-secondary': '#cfdbe8', '--dsw-alias-border-l2': '#cfdbe8', '--dsw-alias-state-business-primary': '#0e7490', 'color-scheme': 'light' } },
-      { id: 'moss', name: '苔绿', desc: '低饱和绿', vars: { '--dsw-alias-bg-layer': '#f4f8f3', '--dsw-alias-bg-layer-2': '#e9f1e7', '--dsw-alias-bg-layer-3': '#dce8d9', '--dsw-alias-bg-secondary': '#e9f1e7', '--dsw-alias-label-primary': '#22301f', '--dsw-alias-label-secondary': '#3d4f39', '--dsw-alias-label-tertiary': '#6f8369', '--dsw-alias-border-secondary': '#d0ddcb', '--dsw-alias-border-l2': '#d0ddcb', '--dsw-alias-state-business-primary': '#2f7d4f', 'color-scheme': 'light' } },
-      { id: 'violet', name: '紫罗兰', desc: '淡紫底', vars: { '--dsw-alias-bg-layer': '#f8f5fd', '--dsw-alias-bg-layer-2': '#f0eaf9', '--dsw-alias-bg-layer-3': '#e5dcf4', '--dsw-alias-bg-secondary': '#f0eaf9', '--dsw-alias-label-primary': '#2c2338', '--dsw-alias-label-secondary': '#4a3d5c', '--dsw-alias-label-tertiary': '#7c6e91', '--dsw-alias-border-secondary': '#ddd2ee', '--dsw-alias-border-l2': '#ddd2ee', '--dsw-alias-state-business-primary': '#7c3aed', 'color-scheme': 'light' } },
-      { id: 'amber', name: '琥珀', desc: '暖橙、深色底', vars: { '--dsw-alias-bg-layer': '#191410', '--dsw-alias-bg-layer-2': '#221a14', '--dsw-alias-bg-layer-3': '#2e231a', '--dsw-alias-bg-secondary': '#221a14', '--dsw-alias-label-primary': '#f5e9dc', '--dsw-alias-label-secondary': '#d8c6b2', '--dsw-alias-label-tertiary': '#9c8873', '--dsw-alias-border-secondary': '#3a2c20', '--dsw-alias-border-l2': '#3a2c20', '--dsw-alias-state-business-primary': '#f59e0b', 'color-scheme': 'dark' } },
-      { id: 'sakura', name: '樱粉', desc: '浅粉底', vars: { '--dsw-alias-bg-layer': '#fff7f9', '--dsw-alias-bg-layer-2': '#fdedf1', '--dsw-alias-bg-layer-3': '#f8dde4', '--dsw-alias-bg-secondary': '#fdedf1', '--dsw-alias-label-primary': '#38222a', '--dsw-alias-label-secondary': '#5a3d47', '--dsw-alias-label-tertiary': '#8d6c77', '--dsw-alias-border-secondary': '#efd0d9', '--dsw-alias-border-l2': '#efd0d9', '--dsw-alias-state-business-primary': '#db2777', 'color-scheme': 'light' } }
-    ]
-    function applyUiTheme(theme) {
-      var vars = (theme && theme.ui) || {}
-      var keys = Object.keys(vars)
-      var node = document.getElementById(UI_STYLE_ID)
-      if (!keys.length) {
-        if (node && node.parentNode) node.parentNode.removeChild(node)
-        return
-      }
-      if (!node) {
-        node = document.createElement('style')
-        node.id = UI_STYLE_ID
-        node.setAttribute('data-boot-ui-theme', '1')
-        document.head.appendChild(node)
-      }
-      node.textContent = ':root{' + keys.map(function (k) { return k + ':' + vars[k] + ';' }).join('') + '}'
-    }
-    function loadUiTheme() {
-      fetch(UI_BASE + '/config', { headers: { Accept: 'application/json' } })
-        .then(function (r) { return r.json() })
-        .then(function (j) {
-          var cfg = (j && j.config) || {}
-          var hit = UI_THEMES.filter(function (x) { return x.id === (cfg.uiTheme || 'default') })[0] || UI_THEMES[0]
-          applyUiTheme(hit)
-        })
-        .catch(function () { /* 拿不到就保持现状 */ })
-    }
-    if (typeof document !== 'undefined') {
-      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadUiTheme, { once: true })
-      else loadUiTheme()
-    }
-
     /* ── 样式（全部挂 __hb_ 前缀，避免和别的插件撞名）─────────────────── */
     var CSS = [
       '.__hb_root{max-width:680px;display:flex;flex-direction:column;gap:14px;font-size:13px;color:var(--dsw-alias-label-primary)}',
@@ -146,181 +101,11 @@ window.__ModuleLoader__.load({
       bootLineEn: 'BOOTING DEEP-SPACE RETRIEVAL TERMINAL',
       footer: 'DEEPSEEK HARNESS · ORIGINAL BOOT SEQUENCE'
     }
-    var FALLBACK_VERSION = '1.6.0-beta.5'
+    var FALLBACK_VERSION = '1.5.1'
 
     /* 由 build.mjs 从 src/boot.js 注入，三处共用一份真相源 */
-    var DEFAULT_STEPS = [
-  {
-    "zh": "电源接入",
-    "en": "POWER ON SELF TEST",
-    "sub": "机箱电压稳定 · 显像管预热",
-    "pct": 8,
-    "hold": 1150,
-    "tag": "POST"
-  },
-  {
-    "zh": "阵列自检",
-    "en": "DRIVE ARRAY CHECK",
-    "sub": "四组盘位逐个应答",
-    "pct": 24,
-    "hold": 1300,
-    "tag": "ARRAY"
-  },
-  {
-    "zh": "磁道寻道",
-    "en": "TRACK SEEK PROBE",
-    "sub": "磁头往复寻道，等待最低延迟",
-    "pct": 42,
-    "hold": 1300,
-    "tag": "SEEK"
-  },
-  {
-    "zh": "扇区校验",
-    "en": "SECTOR VERIFY",
-    "sub": "读到不可信扇区，需要人工放行",
-    "pct": 58,
-    "hold": 900,
-    "tag": "SCAN",
-    "gate": true,
-    "alert": true
-  },
-  {
-    "zh": "权限核验",
-    "en": "OPERATOR CLEARANCE",
-    "sub": "比对操作员凭据与等级",
-    "pct": 78,
-    "hold": 1250,
-    "tag": "AUTH"
-  },
-  {
-    "zh": "数据贯通",
-    "en": "DATA LINK ESTABLISHED",
-    "sub": "全通道灌入，索引重建完成",
-    "pct": 100,
-    "hold": 1150,
-    "tag": "LINK"
-  }
-]
-    var DEFAULT_LOGS = [
-  [
-    [
-      "POST",
-      "机箱电源接入 · 12.0V / 5.02V 稳定"
-    ],
-    [
-      "POST",
-      "显像管预热 1200ms · 偏压正常"
-    ],
-    [
-      "BIOS",
-      "固件签名 4C1E…9A02 校验通过",
-      "ok"
-    ],
-    [
-      "BIOS",
-      "内存 32768 KiB · 全量寻址通过",
-      "ok"
-    ]
-  ],
-  [
-    [
-      "ARRAY",
-      "盘位 01 应答 · 主轴 7200 RPM"
-    ],
-    [
-      "ARRAY",
-      "盘位 02 应答 · 主轴 7200 RPM"
-    ],
-    [
-      "ARRAY",
-      "盘位 03 应答 · 主轴 7200 RPM"
-    ],
-    [
-      "ARRAY",
-      "盘位 04 应答 · 主轴 7200 RPM",
-      "ok"
-    ],
-    [
-      "ARRAY",
-      "四组盘位就绪 · 冗余模式 MIRROR"
-    ]
-  ],
-  [
-    [
-      "SEEK",
-      "磁头归零 · 柱面 0000 道 00"
-    ],
-    [
-      "SEEK",
-      "往复寻道 ×64 · 平均 8.2ms"
-    ],
-    [
-      "SEEK",
-      "伺服校准 · 偏移 +0.03 刻"
-    ],
-    [
-      "SEEK",
-      "预读缓存 512 KiB 已装填",
-      "ok"
-    ]
-  ],
-  [
-    [
-      "SCAN",
-      "顺序扫描 · 起始 LBA 0x00A4F2"
-    ],
-    [
-      "SCAN",
-      "扇区 0x00A7C1 校验和不符",
-      "warn"
-    ],
-    [
-      "SCAN",
-      "重试 3 次 · 仍不可信",
-      "bad"
-    ],
-    [
-      "SCAN",
-      "挂起写入，等待人工放行",
-      "warn"
-    ]
-  ],
-  [
-    [
-      "AUTH",
-      "读取操作员凭据 · 指纹域"
-    ],
-    [
-      "AUTH",
-      "比对等级 3 · 允许访问索引"
-    ],
-    [
-      "AUTH",
-      "签发临时会话令牌 · 有效 900s",
-      "ok"
-    ]
-  ],
-  [
-    [
-      "LINK",
-      "建立 8 条并行通道"
-    ],
-    [
-      "LINK",
-      "灌入索引 1 284 条 · 去重完成"
-    ],
-    [
-      "LINK",
-      "控制器响应 0.7ms · 链路稳定",
-      "ok"
-    ],
-    [
-      "LINK",
-      "控制台移交 · 准备进入主界面",
-      "ok"
-    ]
-  ]
-]
+    var DEFAULT_STEPS = __HDD_DEFAULT_STEPS__
+    var DEFAULT_LOGS = __HDD_DEFAULT_LOGS__
     var DEFAULT_COLORS = { paper: '#e9e2d2', amber: '#f2a23c', jade: '#58d6b0', alarm: '#e4483c' }
 
     var TONES = [['', '普通'], ['ok', '成功'], ['warn', '警告'], ['bad', '失败']]
@@ -520,52 +305,6 @@ window.__ModuleLoader__.load({
       var [busy, setBusy] = react.useState(false)
       var [user, setUser] = react.useState(null)
       var [update, setUpdate] = react.useState(null)
-      var [themes, setThemes] = react.useState(null)
-      var [themeDir, setThemeDir] = react.useState('')
-      var [importPath, setImportPath] = react.useState('')
-
-      function loadThemes() {
-        fetch('/hdd-console/themes', { headers: { Accept: 'application/json' } })
-          .then(function (r) { return r.json() })
-          .then(function (j) { setThemes(j && j.themes ? j.themes : []); setThemeDir(j && j.dir ? j.dir : '') })
-          .catch(function () { setThemes([]) })
-      }
-
-      function importTheme() {
-        var p2 = String(importPath || '').trim()
-        if (!p2) { setNotice('先填一个目录路径'); return }
-        setBusy(true)
-        fetch('/hdd-console/themes', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ importDir: p2 })
-        })
-          .then(function (r) { return r.json() })
-          .then(function (j) {
-            if (!j || j.ok !== true) throw new Error((j && j.error) || '导入失败')
-            setThemes(j.themes || [])
-            setNotice('已导入主题 ' + j.id)
-            setImportPath('')
-          })
-          .catch(function (e) { setNotice('导入失败：' + String(e && e.message ? e.message : e)) })
-          .then(function () { setBusy(false) })
-      }
-
-      function deleteTheme(id) {
-        if (!window.confirm('删除主题 ' + id + ' ？')) return
-        fetch('/hdd-console/themes', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ delete: id })
-        })
-          .then(function (r) { return r.json() })
-          .then(function (j) {
-            if (!j || j.ok !== true) throw new Error((j && j.error) || '删除失败')
-            setThemes(j.themes || [])
-            if (draft && draft.theme === id) set('theme', 'jade')
-          })
-          .catch(function (e) { setNotice('删除失败：' + String(e && e.message ? e.message : e)) })
-      }
 
       function load() {
         setError(null)
@@ -583,7 +322,7 @@ window.__ModuleLoader__.load({
           .catch((e) => setError('读取配置失败：' + String(e && e.message ? e.message : e)))
       }
 
-      react.useEffect(function () { load(); loadThemes() }, [])
+      react.useEffect(function () { load() }, [])
 
       function checkUpdates() {
         setUpdate({ checking: true })
@@ -808,114 +547,8 @@ window.__ModuleLoader__.load({
         ['always', '每次打开都播放']
       ]
 
-      /* ── 主题：缩略图网格 ── */
-      function themeThumb(t) {
-        if (!t.bg) {
-          return h('div', {
-            style: {
-              width: '100%', height: '54px', borderRadius: '6px',
-              background: t.colors && t.colors.accent ? t.colors.accent : '#888'
-            }
-          })
-        }
-        var uri = 'data:image/svg+xml;utf8,' + encodeURIComponent(t.bg)
-        return h('img', {
-          src: uri,
-          alt: t.name,
-          style: { width: '100%', height: '54px', objectFit: 'cover', borderRadius: '6px', display: 'block' }
-        })
-      }
-
-      function uiThemeGrid() {
-        var cur = draft.uiTheme || 'default'
-        return h('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(118px, 1fr))', gap: '8px' } },
-          UI_THEMES.map(function (t) {
-            var on = cur === t.id
-            var v = t.vars || {}
-            return h('div', {
-              key: t.id,
-              onClick: function () { set('uiTheme', t.id); applyUiTheme(t) },
-              style: {
-                cursor: 'pointer', padding: '5px', borderRadius: '8px',
-                border: '2px solid ' + (on ? '#2f9e63' : 'var(--dsw-alias-border-l2)'),
-                background: on ? 'rgba(47,158,99,0.08)' : 'transparent'
-              }
-            },
-              h('div', { style: { display: 'flex', height: '32px', borderRadius: '5px', overflow: 'hidden', border: '1px solid var(--dsw-alias-border-secondary)' } },
-                h('i', { style: { flex: '1', background: v['--dsw-alias-bg-layer'] || '#ffffff' } }),
-                h('i', { style: { flex: '1', background: v['--dsw-alias-label-primary'] || '#1f2430' } }),
-                h('i', { style: { flex: '1', background: v['--dsw-alias-state-business-primary'] || '#2563eb' } })
-              ),
-              h('div', { style: { fontSize: '12px', fontWeight: 600, marginTop: '4px' } }, t.name),
-              h('div', { style: { fontSize: '11px', opacity: .68, lineHeight: 1.3 } }, t.desc)
-            )
-          })
-        )
-      }
-
-      function themeGrid() {
-        if (!themes) return h('div', { className: '__hb_notice' }, '读取主题中…')
-        return h('div', {
-          style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(132px, 1fr))', gap: '10px' }
-        }, themes.map(function (t) {
-          var active = draft.theme === t.id
-          return h('div', {
-            key: t.id,
-            onClick: function () { set('theme', t.id); applyUiTheme(t) },
-            style: {
-              cursor: 'pointer',
-              padding: '6px',
-              borderRadius: '9px',
-              border: '2px solid ' + (active ? '#2f9e63' : 'var(--dsw-alias-border-secondary,#e5e8ef)'),
-              background: active ? 'rgba(47,158,99,0.07)' : 'transparent'
-            }
-          },
-            themeThumb(t),
-            h('div', { style: { fontSize: '12.5px', fontWeight: 600, marginTop: '5px' } },
-              t.name,
-              t.user ? h('span', { style: { fontSize: '11px', color: '#2f9e63', marginLeft: '4px' } }, '导入') : null,
-              t.broken ? h('span', { style: { fontSize: '11px', color: '#e5484d', marginLeft: '4px' } }, '损坏') : null
-            ),
-            h('div', { style: { fontSize: '11.5px', opacity: .7, lineHeight: 1.35, marginTop: '2px' } }, t.desc || ''),
-            t.user ? h('button', {
-              className: '__hb_btn',
-              style: { marginTop: '4px', padding: '1px 7px', fontSize: '11.5px', color: '#e5484d' },
-              onClick: function (e) { e.stopPropagation(); deleteTheme(t.id) }
-            }, '删除') : null
-          )
-        }))
-      }
-
       /* ── 基础 ── */
       var basicPane = [
-        h('div', { className: '__hb_group', key: 'theme' },
-          h('div', { className: '__hb_groupTitle' }, '主题'),
-          h('div', { className: '__hb_notice' },
-            '内置主题的图案全部由代码生成（纯几何 SVG），不含任何外部素材。'),
-          themeGrid(),
-          h('div', { style: { height: '6px' } }),
-          h('div', { className: '__hb_groupTitle', style: { marginTop: '4px' } }, '主界面主题'),
-          h('div', { className: '__hb_notice' },
-            '只改 DSH 界面配色，与上面的开机动画主题完全独立。'),
-          uiThemeGrid(),
-          h('div', { className: '__hb_field' },
-            h('label', null, '导入主题目录'),
-            h('div', { style: { display: 'flex', gap: '8px', marginTop: '4px' } },
-              h('input', {
-                className: '__hb_input',
-                style: { flex: '1' },
-                placeholder: '例如 D:\\my-theme（里面要有 theme.json）',
-                value: importPath,
-                onChange: function (e) { setImportPath(e.target.value) }
-              }),
-              h('button', { className: '__hb_btn', disabled: busy, onClick: importTheme },
-                busy ? '导入中…' : '导入')
-            ),
-            h('div', { className: '__hb_hint', style: { marginTop: '4px', fontSize: '12px', opacity: .7 } },
-              '导入后的主题会复制到 ' + (themeDir || '~/.dsh/hdd-themes') + ' 并出现在上面')
-          )
-        ),
-
         h('div', { className: '__hb_group', key: 'play' },
           h('div', { className: '__hb_groupTitle' }, '播放'),
           h(Check, {
