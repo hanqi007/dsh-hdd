@@ -29,7 +29,7 @@ const ctx = {
 mod.apply(ctx)
 
 console.log('\n[2] 路由')
-check('注册了 5 条路由', routes.length === 5, String(routes.length))
+check('注册了 4 条路由', routes.length === 4, String(routes.length))
 const byPath = Object.fromEntries(routes.map((r) => [r.path, r]))
 check('样式路由存在', !!byPath['/hdd-console/splash.css'])
 check('运行时路由存在', !!byPath['/hdd-console/splash.js'])
