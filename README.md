@@ -131,38 +131,26 @@
 
 ---
 
-## 安装到 DSH
+## 安装
 
-包名 `hdd-console-boot`。装完重启 dsh web 或桌面端，设置页会多出「开机动画」。
+**直接下载**：[`hdd-console-boot-1.6.1.tgz`](https://github.com/hanqi007/dsh-hdd/releases/download/v1.6.1/hdd-console-boot-1.6.1.tgz)（最新正式版）
 
-```bash
-# 桌面端
-dsh plugin --profile desktop add ./hdd-console-boot-1.0.0.tgz
+或者从 [Releases 页面](https://github.com/hanqi007/dsh-hdd/releases) 挑版本。
 
-# web profile
-dsh plugin --profile web add ./hdd-console-boot-1.0.0.tgz
+下载后用 DSH 自带的命令安装。安装前先**完全退出 DSH**，装完再启动。
+
+```powershell
+# 官方桌面端（profile 固定为 desktop）
+D:\DSH\resources\runtime\cli\bin\dsh.cmd plugin --profile desktop add "C:\Downloads\hdd-console-boot-1.6.1.tgz"
+
+# 浏览器 WebUI（profile 为 web）
+npx -y @deepseek-ai/dsh plugin --profile web add "C:\Downloads\hdd-console-boot-1.6.1.tgz"
 ```
 
-> 部分 DSH 版本会拒绝在终端里操作 `desktop` profile（提示 managed exclusively by the
-> Electron application），此时请用桌面端的「插件」页安装，或把本目录放进 profile 的
-> `node_modules` 后在 `cordis.patch.yml` 里插一条同 id 的 entry。
+装完在 **设置 → HDD 控制台** 里能看到配置入口。
 
-### 环境要求
-
-| 项 | 要求 |
-|---|---|
-| 平台 | DSH **web** profile / DSH **desktop** profile |
-| Node | **>= 20** |
-| 依赖 | 无（不需要 `npm install`） |
-| 浏览器 | 支持 canvas 2D 与 WebAudio 的现代浏览器；不支持时对应部分自动降级，动画照常播 |
-
-### 卸载
-
-```bash
-dsh plugin --profile desktop remove hdd-console-boot
-```
-
----
+> `dsh.cmd` 位于 DSH 安装目录下。若你的安装位置不同，把路径换成实际的
+> `<DSH安装目录>\resources\runtime\cli\bin\dsh.cmd`。
 
 ## 设置项（设置页 →「开机动画」）
 
